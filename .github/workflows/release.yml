@@ -59,10 +59,12 @@ jobs:
         env:
           LDFLAGS: "-X github.com/spinnaker/spin/version.Version=${{ steps.release_info.outputs.RELEASE_VERSION }}"
         run: |
+          # build binaries
           GOARCH=amd64 GOOS=darwin go build -ldflags "${LDFLAGS}" -o dist/${{ steps.release_info.outputs.RELEASE_VERSION }}/darwin/amd64/spin .
           GOARCH=amd64 GOOS=linux go build -ldflags "${LDFLAGS}" -o dist/${{ steps.release_info.outputs.RELEASE_VERSION }}/linux/amd64/spin .
           GOARCH=amd64 GOOS=windows go build -ldflags "${LDFLAGS}" -o dist/${{ steps.release_info.outputs.RELEASE_VERSION }}/windows/amd64/spin.exe .
           dist/${{ steps.release_info.outputs.RELEASE_VERSION }}/linux/amd64/spin --version
+
       - name: Login to Google Cloud
         # Only run this on repositories in the 'spinnaker' org, not on forks.
         if: startsWith(github.repository, 'spinnaker/')
