@@ -20,24 +20,6 @@ jobs:
       with:
         version: v1.32
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-go@v2
-      with:
-        go-version: 1.15
-    - uses: actions/cache@v2
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-    - name: Install
-      run: go get -d -v
-    - name: Test
-      run: go test -v ./...
-
   release:
     runs-on: ubuntu-latest
     steps:
@@ -92,6 +74,8 @@ jobs:
             ${{ runner.os }}-go-
       - name: Install
         run: go get -d -v
+      - name: Test
+        run: go test -v ./...
       - name: Build binaries
         env:
           LDFLAGS: "-X github.com/spinnaker/spin/version.Version=${{ steps.release_info.outputs.RELEASE_VERSION }}"
